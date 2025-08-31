@@ -16,7 +16,6 @@ interface AuthState {
 const getUserFromToken = (token: string | null): User | null => {
   if (!token) return null;
   try {
-    // Note: The decoded object might not have a 'name'. Adjust your backend to include it if needed.
     const decoded: { userId: string; email: string; name?: string } = jwtDecode(token);
     return { id: decoded.userId, name: decoded.name || '', email: decoded.email };
   } catch (error) {
@@ -60,52 +59,60 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    logout: (state) => {
+    logout: (state: AuthState) => {
       clearToken();
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
     },
-    clearAuthError: (state) => {
+    clearAuthError: (state: AuthState) => {
       state.error = null;
     }
   },
   extraReducers: (builder) => {
     builder
-      // Handle pending state for all thunks
+      // FIX: All .addCase calls must come before .addMatcher calls.
+      .addCase(verifyLoginOtp.fulfilled, (state, action) => {
+        const rememberMe = action.meta.arg.rememberMe ?? true;
+        state.isLoading = false;
+        state.isAuthenticated = true;
+        state.token = action.payload.token;
+        state.user = action.payload.user;
+        setToken(action.payload.token, rememberMe);
+      })
+      .addCase(verifySignupOtp.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isAuthenticated = true;
+        state.token = action.payload.token;
+        state.user = action.payload.user;
+        setToken(action.payload.token, true); // Always remember on signup
+      })
+      .addCase(googleLogin.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isAuthenticated = true;
+        state.token = action.payload.token;
+        state.user = action.payload.user;
+        setToken(action.payload.token, true); // Always remember on Google login
+      })
+      // Matchers for generic states come after specific cases
       .addMatcher(
-        (action) => action.type.endsWith('/pending'),
-        (state) => {
+        (action) => action.type.startsWith('auth/') && action.type.endsWith('/pending'),
+        (state: AuthState) => {
           state.isLoading = true;
           state.error = null;
         }
       )
-      // Handle successful login/verification
       .addMatcher(
-        (action): action is PayloadAction<{ token: string; user: User }> =>
-          ['auth/verifySignupOtp/fulfilled', 'auth/verifyLoginOtp/fulfilled', 'auth/googleLogin/fulfilled'].includes(action.type),
-        (state, action) => {
+        (action): action is PayloadAction<string> => action.type.startsWith('auth/') && action.type.endsWith('/rejected'),
+        (state: AuthState, action: PayloadAction<string>) => {
           state.isLoading = false;
-          state.isAuthenticated = true;
-          state.token = action.payload.token;
-          state.user = action.payload.user;
-          setToken(action.payload.token);
+          state.error = action.payload;
         }
       )
-       // Handle OTP request success
       .addMatcher(
         (action) => ['auth/requestSignupOtp/fulfilled', 'auth/requestLoginOtp/fulfilled'].includes(action.type),
-        (state) => {
+        (state: AuthState) => {
           state.isLoading = false;
-        }
-      )
-      // Handle rejected state for all thunks
-      .addMatcher(
-        // FIX IS HERE: Type the action as PayloadAction<string>
-        (action): action is PayloadAction<string> => action.type.endsWith('/rejected'),
-        (state, action) => {
-          state.isLoading = false;
-          state.error = action.payload; // No need for 'as string' anymore
         }
       );
   },

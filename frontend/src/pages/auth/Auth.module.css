@@ -76,3 +76,19 @@
   margin-bottom: 1rem;
   text-align: center;
 }
+
+/* FIX: Add styles for the "Remember Me" checkbox */
+.rememberMe {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.rememberMe input {
+  margin-right: 0.5rem;
+}
+
+.rememberMe label {
+  color: var(--text-color-light);
+}

@@ -14,6 +14,8 @@ import authImage from '../../assets/windows-11-blue-wallpaper.jpg';
 const LoginPage = () => {
   const [step, setStep] = useState<'email' | 'otp'>('email');
   const [formData, setFormData] = useState({ email: '', otp: '' });
+  // FIX: Add state for the "Remember Me" checkbox
+  const [rememberMe, setRememberMe] = useState(true);
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -43,7 +45,8 @@ const LoginPage = () => {
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(verifyLoginOtp({ email: formData.email, otp: formData.otp }));
+    // FIX: Pass the 'rememberMe' state when dispatching the action
+    dispatch(verifyLoginOtp({ email: formData.email, otp: formData.otp, rememberMe }));
   };
   
   return (
@@ -84,6 +87,16 @@ const LoginPage = () => {
                   onChange={handleChange}
                   required
                 />
+                {/* FIX: Add the "Remember Me" checkbox UI */}
+                <div className={styles.rememberMe}>
+                  <input
+                    type="checkbox"
+                    id="rememberMe"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                  />
+                  <label htmlFor="rememberMe">Remember Me</label>
+                </div>
                 <Button type="submit" isLoading={isLoading}>
                   Sign In
                 </Button>

@@ -1,10 +1,16 @@
 import jwt from 'jsonwebtoken';
-import { JwtPayload } from '../types';
+
+// The JwtPayload interface is now updated to include the user's name
+export interface JwtPayload {
+  userId: string;
+  email: string;
+  name: string;
+}
 
 export const generateToken = (payload: JwtPayload): string => {
   const secret = process.env.JWT_SECRET as string;
   
-  // Use a type assertion to bypass the strict type checking
+  // No changes needed here, but it will now accept a payload with a name
   return jwt.sign(payload, secret, { expiresIn: process.env.JWT_EXPIRE } as jwt.SignOptions);
 };
 

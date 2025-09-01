@@ -1,65 +1,139 @@
+/* ========= Global Container ========= */
 .authContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  background: #f9fafb;
   padding: 1rem;
 }
 
+/* ========= Desktop Wrapper ========= */
 .authWrapper {
   width: 100%;
-  max-width: 900px;
-  background-color: var(--form-background-color);
-  border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
+  max-width: 1440px;
+  height: 1024px;
+  background: #fff;
+  border-radius: 32px;
   display: flex;
   overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
+/* ========= Left Form Section ========= */
 .formContainer {
   flex: 1;
-  padding: 3rem 2.5rem;
+  max-width: 591px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
+.formInner {
+  width: 100%;
+  max-width: 399px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+
+.logoIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.logoText {
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+/* ========= Right Image Section ========= */
 .imageContainer {
-  flex: 1;
-  display: none; /* Hidden on mobile */
-}
-
-@media (min-width: 768px) {
-  .imageContainer {
-    display: block;
-  }
+  flex: 1.4;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .image {
   width: 100%;
   height: 100%;
+  border-radius: 24px;
   object-fit: cover;
 }
 
+/* ========= Typography ========= */
 .title {
-  font-size: 2rem;
+  font-size: 2.25rem;
   font-weight: 700;
-  margin-bottom: 0.5rem;
+  margin: 0;
+  color: #111827;
 }
 
 .subtitle {
-  color: var(--text-color-light);
-  margin-bottom: 2rem;
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 8px 0 0 0;
+}
+
+/* ========= Forms & Content ========= */
+.formContent {
+  margin-top: 32px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.orSeparator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #9ca3af;
+    margin: 16px 0;
+}
+
+.orSeparator::before,
+.orSeparator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.orSeparator:not(:empty)::before {
+    margin-right: .5em;
+}
+
+.orSeparator:not(:empty)::after {
+    margin-left: .5em;
+}
+
+.googleButtonWrapper {
+  display: flex;
+  justify-content: center;
 }
 
 .switchAuth {
-  margin-top: 1.5rem;
+  margin-top: 32px;
   text-align: center;
   font-size: 0.875rem;
+  color: #374151;
 }
 
 .switchAuth a {
-  color: var(--primary-color);
+  color: #2563eb;
   font-weight: 600;
   text-decoration: none;
 }
@@ -72,23 +146,68 @@
   background-color: #fee2e2;
   color: #b91c1c;
   padding: 0.75rem 1rem;
-  border-radius: var(--border-radius);
+  border-radius: 8px;
   margin-bottom: 1rem;
   text-align: center;
 }
 
-/* FIX: Add styles for the "Remember Me" checkbox */
 .rememberMe {
   display: flex;
   align-items: center;
-  margin-bottom: 1.5rem;
+  gap: 8px;
   font-size: 0.875rem;
+  color: #374151;
 }
 
-.rememberMe input {
-  margin-right: 0.5rem;
+/* ========= Responsive Styles ========= */
+@media (max-width: 1024px) {
+  .imageContainer {
+    display: none;
+  }
+  .authWrapper {
+    height: auto;
+    max-width: 500px;
+  }
+  .formContainer {
+    padding: 2rem;
+    max-width: 100%;
+  }
 }
 
-.rememberMe label {
-  color: var(--text-color-light);
+/* FIX: Improved mobile responsiveness */
+@media (max-width: 767px) {
+  .authContainer {
+    padding: 0;
+    align-items: flex-start;
+    background: #fff;
+  }
+
+  .authWrapper {
+    width: 100%;
+    min-height: 100vh; /* Allow scrolling if content is taller */
+    height: auto;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0 1.5rem; /* Add horizontal padding */
+    justify-content: flex-start;
+  }
+
+  .formContainer {
+    padding: 3rem 0; /* Add vertical padding for spacing from top/bottom */
+  }
+
+  .formInner {
+    width: 100%;
+  }
+
+  .header {
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 24px;
+  }
+
+  .formContent {
+     margin-top: 24px;
+  }
 }
+

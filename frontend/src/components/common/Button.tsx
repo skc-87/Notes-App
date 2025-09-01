@@ -4,12 +4,14 @@ import styles from './Button.module.css';
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary';
   isLoading?: boolean;
+  loadingText?: string; // Add a prop for custom loading text
 }
 
 const Button: React.FC<ButtonProps> = ({
   children,
   variant = 'primary',
   isLoading = false,
+  loadingText = 'Loading...', // Set a default loading text
   ...props
 }) => {
   return (
@@ -18,7 +20,8 @@ const Button: React.FC<ButtonProps> = ({
       disabled={isLoading}
       {...props}
     >
-      {isLoading ? 'Loading...' : children}
+      {/* FIX: Use the loadingText prop when isLoading is true */}
+      {isLoading ? loadingText : children}
     </button>
   );
 };

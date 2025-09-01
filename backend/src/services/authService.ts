@@ -3,8 +3,6 @@ import { generateOTP } from '../utils/otpGenerator';
 import { sendOTPEmail } from './emailService';
 import { verifyGoogleToken, findOrCreateGoogleUser } from '../config/googleAuth';
 
-// in src/services/authService.ts
-
 export const requestSignupOTP = async (name: string, email: string, dateOfBirth: Date): Promise<IUser> => {
   const existingVerifiedUser = await User.findOne({ email, isVerified: true });
   if (existingVerifiedUser) {
@@ -12,22 +10,17 @@ export const requestSignupOTP = async (name: string, email: string, dateOfBirth:
   }
 
   const otp = generateOTP();
-  const otpExpiry = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+  const otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
 
-  // Find an unverified user or create a new one
   let user = await User.findOneAndUpdate(
     { email, isVerified: false },
     { name, dateOfBirth, otp, otpExpiry },
-    { new: true, upsert: true } // Upsert: update if exists, insert if not
+    { new: true, upsert: true }
   );
 
   await sendOTPEmail(email, otp);
   return user;
 };
-
-// in src/services/authService.ts
-
-// in src/services/authService.ts
 
 export const verifyUserOTP = async (email: string, otp: string, password: string): Promise<IUser> => {
   const user = await User.findOne({ email });
@@ -40,7 +33,6 @@ export const verifyUserOTP = async (email: string, otp: string, password: string
     throw new Error('User is already verified');
   }
 
-  // FIX: Add this block to check for missing OTP fields
   if (!user.otp || !user.otpExpiry) {
     throw new Error('OTP not found or has expired. Please request a new one.');
   }
@@ -53,7 +45,6 @@ export const verifyUserOTP = async (email: string, otp: string, password: string
     throw new Error('OTP has expired');
   }
 
-  // Set the password and finalize verification
   user.password = password;
   user.isVerified = true;
   user.otp = undefined;
@@ -63,25 +54,20 @@ export const verifyUserOTP = async (email: string, otp: string, password: string
   return user;
 };
 
-// in src/services/authService.ts
-
 export const requestLoginOTP = async (email: string): Promise<void> => {
   const user = await User.findOne({ email });
 
-  // Ensure the user exists and is already verified
   if (!user || !user.isVerified) {
     throw new Error('No verified account found with this email. Please sign up first.');
   }
 
   const otp = generateOTP();
   user.otp = otp;
-  user.otpExpiry = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes expiry
+  user.otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
   await user.save();
 
   await sendOTPEmail(email, otp);
 };
-
-// in src/services/authService.ts
 
 export const verifyLoginOTP = async (email: string, otp: string): Promise<IUser> => {
   const user = await User.findOne({ email });
@@ -102,7 +88,6 @@ export const verifyLoginOTP = async (email: string, otp: string): Promise<IUser>
     throw new Error('OTP has expired.');
   }
 
-  // Clear OTP fields after successful verification
   user.otp = undefined;
   user.otpExpiry = undefined;
   await user.save();
@@ -136,18 +121,10 @@ export const loginUser = async (email: string, password: string): Promise<IUser>
 
 export const googleSignIn = async (idToken: string): Promise<IUser> => {
   try {
-    console.log('Starting Google sign-in process...');
-    
-    // Step 1: Verify Google token (USES CLIENT SECRET)
     const googleData = await verifyGoogleToken(idToken);
-    
-    // Step 2: Find or create user
     const user = await findOrCreateGoogleUser(googleData);
-    
-    console.log('Google sign-in successful for user:', user.email);
     return user;
   } catch (error) {
-    console.error('Google sign-in error:', error);
     throw new Error((error as Error).message || 'Google authentication failed');
   }
 };

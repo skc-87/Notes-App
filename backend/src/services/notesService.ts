@@ -11,7 +11,6 @@ export const createNote = async (title: string, content: string, userId: Types.O
     
     return note;
   } catch (error) {
-    console.error('Error creating note:', error);
     throw new Error('Failed to create note');
   }
 };
@@ -21,7 +20,6 @@ export const getNotesByUser = async (userId: Types.ObjectId): Promise<INote[]> =
     const notes = await Note.find({ userId }).sort({ createdAt: -1 });
     return notes;
   } catch (error) {
-    console.error('Error fetching notes:', error);
     throw new Error('Failed to fetch notes');
   }
 };
@@ -31,7 +29,6 @@ export const getNoteById = async (noteId: string, userId: Types.ObjectId): Promi
     const note = await Note.findOne({ _id: noteId, userId });
     return note;
   } catch (error) {
-    console.error('Error fetching note:', error);
     throw new Error('Failed to fetch note');
   }
 };
@@ -48,7 +45,6 @@ export const updateNote = async (
       throw new Error('Note not found or you do not have permission to update it');
     }
     
-    // Update only the fields that are provided
     if (updates.title !== undefined) {
       note.title = updates.title;
     }
@@ -60,7 +56,6 @@ export const updateNote = async (
     await note.save();
     return note;
   } catch (error) {
-    console.error('Error updating note:', error);
     throw new Error('Failed to update note');
   }
 };
@@ -75,7 +70,6 @@ export const deleteNote = async (noteId: string, userId: Types.ObjectId): Promis
     
     await Note.deleteOne({ _id: noteId });
   } catch (error) {
-    console.error('Error deleting note:', error);
     throw new Error('Failed to delete note');
   }
 };

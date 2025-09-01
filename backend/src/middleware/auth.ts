@@ -19,7 +19,6 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
       return;
     }
     
-    // Add user to request object
     (req as any).user = user;
     next();
   } catch (error) {

@@ -44,8 +44,6 @@ export const validateNoteUpdate = (req: AuthRequest, res: Response, next: NextFu
   next();
 };
 
-// in src/middleware/validation.ts
-
 export const validateOtpRequest = (req: AuthRequest, res: Response, next: NextFunction): void => {
   const { name, email, dateOfBirth } = req.body;
 

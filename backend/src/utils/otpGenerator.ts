@@ -4,7 +4,7 @@ export const generateOTP = (): string => {
   return speakeasy.totp({
     secret: speakeasy.generateSecret().base32,
     digits: 6,
-    step: 300, // 5 minutes
+    step: 300,
   });
 };
 
@@ -13,7 +13,7 @@ export const verifyOTP = (token: string, secret: string): boolean => {
     secret: secret,
     encoding: 'base32',
     token: token,
-    step: 300, // 5 minutes
+    step: 300,
     window: 1,
   });
 };

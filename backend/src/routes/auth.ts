@@ -6,10 +6,10 @@ import {
   googleLogin,
   getGoogleAuthStatus,
   getMe,
-  requestLoginOTP,  // Add this
-  verifyLoginOTP, 
+  requestLoginOTP,
+  verifyLoginOTP,
 } from '../controllers/authController';
-import { validateLogin ,validateOtpRequest} from '../middleware/validation';
+import { validateLogin, validateOtpRequest } from '../middleware/validation';
 import { authenticate } from '../middleware/auth';
 
 const router = express.Router();
@@ -21,8 +21,7 @@ router.post('/login/request-otp', requestLoginOTP);
 router.post('/login/verify-otp', verifyLoginOTP);
 router.get('/me', authenticate, getMe);
 
-// Google OAuth routes - SIMPLIFIED with GIS
-router.get('/google/status', getGoogleAuthStatus); // Check if Google auth is configured
-router.post('/google', googleLogin); // Main Google login endpoint
+router.get('/google/status', getGoogleAuthStatus);
+router.post('/google', googleLogin);
 
 export default router;

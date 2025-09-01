@@ -20,7 +20,7 @@ const userSchema = new Schema<IUser>({
     required: true,
     trim: true,
   },
-  dateOfBirth: { // Add this block
+  dateOfBirth: {
     type: Date,
   },
   email: {

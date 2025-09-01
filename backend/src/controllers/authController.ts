@@ -3,7 +3,6 @@ import { generateToken } from '../utils/helpers';
 import * as authService from '../services/authService';
 import { AuthRequest } from '../types';
 
-// requestOTP remains the same as it does not generate a token.
 export const requestOTP = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const { name, email, dateOfBirth } = req.body;
@@ -27,7 +26,6 @@ export const verifyOTP = async (req: AuthRequest, res: Response): Promise<void> 
     }
 
     const user = await authService.verifyUserOTP(email, otp, password);
-    // FIX: Added user.name to the token payload
     const token = generateToken({ userId: user._id.toString(), email: user.email, name: user.name });
 
     res.status(200).json({
@@ -59,7 +57,6 @@ export const verifyLoginOTP = async (req: AuthRequest, res: Response): Promise<v
     const { email, otp } = req.body;
     const user = await authService.verifyLoginOTP(email, otp);
 
-    // FIX: Added user.name to the token payload
     const token = generateToken({ userId: user._id.toString(), email: user.email, name: user.name });
 
     res.status(200).json({
@@ -81,7 +78,6 @@ export const login = async (req: AuthRequest, res: Response): Promise<void> => {
     const { email, password } = req.body;
     const user = await authService.loginUser(email, password);
     
-    // FIX: Added user.name to the token payload
     const token = generateToken({ userId: user._id.toString(), email: user.email, name: user.name });
     
     res.status(200).json({
@@ -107,7 +103,6 @@ export const googleLogin = async (req: AuthRequest, res: Response): Promise<void
     }
     
     const user = await authService.googleSignIn(idToken);
-    // FIX: Added user.name to the token payload
     const token = generateToken({ userId: user._id.toString(), email: user.email, name: user.name });
     
     res.status(200).json({
@@ -124,11 +119,6 @@ export const googleLogin = async (req: AuthRequest, res: Response): Promise<void
   }
 };
 
-// No changes needed for getGoogleAuthStatus or getMe
-export const getGoogleAuthStatus = async (req: AuthRequest, res: Response): Promise<void> => {
-    // ... same as before
-};
+export const getGoogleAuthStatus = async (req: AuthRequest, res: Response): Promise<void> => {};
 
-export const getMe = async (req: AuthRequest, res: Response): Promise<void> => {
-    // ... same as before
-};
+export const getMe = async (req: AuthRequest, res: Response): Promise<void> => {};

@@ -27,11 +27,7 @@ export const sendOTPEmail = async (email: string, otp: string): Promise<void> =>
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('OTP email sent successfully to:', email);
   } catch (error: any) {
-    console.error('Error sending OTP email:', error);
-    
-    // Handle specific email errors
     if (error.code === 'EENVELOPE' || error.responseCode === 550) {
       throw new Error('Email address does not exist or cannot receive emails');
     } else if (error.code === 'EAUTH') {

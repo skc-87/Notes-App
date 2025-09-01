@@ -35,7 +35,7 @@ Follow these steps to get the project up and running on your local machine.
 
 1. Clone the Repository
 
-git clone https://github.com/your-username/notes-app.git
+git clone https://github.com/skc-87/notes-app.git
 cd notes-app
 
 2. Backend Setup

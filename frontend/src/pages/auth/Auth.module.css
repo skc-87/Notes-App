@@ -1,4 +1,3 @@
-/* ========= Global Container ========= */
 .authContainer {
   display: flex;
   justify-content: center;
@@ -8,7 +7,6 @@
   padding: 1rem;
 }
 
-/* ========= Desktop Wrapper ========= */
 .authWrapper {
   width: 100%;
   max-width: 1440px;
@@ -20,7 +18,6 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
-/* ========= Left Form Section ========= */
 .formContainer {
   flex: 1;
   max-width: 591px;
@@ -56,7 +53,6 @@
   font-size: 1.25rem;
 }
 
-/* ========= Right Image Section ========= */
 .imageContainer {
   flex: 1.4;
   padding: 16px;
@@ -72,7 +68,6 @@
   object-fit: cover;
 }
 
-/* ========= Typography ========= */
 .title {
   font-size: 2.25rem;
   font-weight: 700;
@@ -86,7 +81,6 @@
   margin: 8px 0 0 0;
 }
 
-/* ========= Forms & Content ========= */
 .formContent {
   margin-top: 32px;
 }
@@ -159,7 +153,6 @@ form {
   color: #374151;
 }
 
-/* ========= Responsive Styles ========= */
 @media (max-width: 1024px) {
   .imageContainer {
     display: none;
@@ -174,7 +167,6 @@ form {
   }
 }
 
-/* FIX: Improved mobile responsiveness */
 @media (max-width: 767px) {
   .authContainer {
     padding: 0;
@@ -184,16 +176,16 @@ form {
 
   .authWrapper {
     width: 100%;
-    min-height: 100vh; /* Allow scrolling if content is taller */
+    min-height: 100vh;
     height: auto;
     border-radius: 0;
     box-shadow: none;
-    padding: 0 1.5rem; /* Add horizontal padding */
+    padding: 0 1.5rem;
     justify-content: flex-start;
   }
 
   .formContainer {
-    padding: 3rem 0; /* Add vertical padding for spacing from top/bottom */
+    padding: 3rem 0;
   }
 
   .formInner {
@@ -210,4 +202,3 @@ form {
      margin-top: 24px;
   }
 }
-

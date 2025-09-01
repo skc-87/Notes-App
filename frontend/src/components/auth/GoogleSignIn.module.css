@@ -6,7 +6,7 @@
 }
 
 .googleButtonWrapper > div {
-    width: 100% !important; /* Force override library styles */
+    width: 100% !important;
 }
 
 .googleButtonWrapper iframe {

@@ -5,7 +5,6 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_API_URL,
 });
 
-// Interceptor to add the auth token to every request
 api.interceptors.request.use(
   (config) => {
     const token = getToken();
@@ -19,7 +18,6 @@ api.interceptors.request.use(
   }
 );
 
-// Interceptor to handle API errors globally
 api.interceptors.response.use(
   (response) => response,
   (error) => {

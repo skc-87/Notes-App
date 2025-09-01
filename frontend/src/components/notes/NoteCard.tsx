@@ -16,16 +16,14 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, onEdit, onDelete }) => {
         <p>{note.content}</p>
       </div>
       <div className={styles.cardActions}>
-        {/* The entire card is now clickable for editing, so we only need a delete button */}
         <button
           onClick={(e) => {
-            e.stopPropagation(); // Prevent the card's onClick from firing
+            e.stopPropagation();
             onDelete(note._id);
           }}
           className={`${styles.actionButton} ${styles.deleteButton}`}
           aria-label="Delete Note"
         >
-          {/* Delete Icon */}
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <polyline points="3 6 5 6 21 6"></polyline>
             <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>

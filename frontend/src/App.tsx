@@ -16,7 +16,6 @@ function App() {
 
   return (
     <Router>
-      {/* The 'future' prop has been removed from <Routes> */}
       <Routes>
         <Route
           path="/login"

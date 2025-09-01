@@ -10,14 +10,10 @@ const GoogleSignIn = () => {
   const handleSuccess = (credentialResponse: CredentialResponse) => {
     if (credentialResponse.credential) {
       dispatch(googleLogin(credentialResponse.credential));
-    } else {
-      console.error('Google login failed: No credential received');
     }
   };
 
-  const handleError = () => {
-    console.error('Google Login Failed');
-  };
+  const handleError = () => {};
 
   return (
     <div className={styles.googleButtonWrapper}>

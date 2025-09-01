@@ -27,7 +27,6 @@ const SignupPage = () => {
   const navigate = useNavigate();
   const { isLoading, error, isAuthenticated } = useAuth();
 
-  // FIX: Get today's date in YYYY-MM-DD format for the max attribute
   const today = new Date().toISOString().split('T')[0];
   
   useEffect(() => {
@@ -120,7 +119,6 @@ const SignupPage = () => {
               <p className={styles.subtitle}>Sign up to enjoy the feature of HD</p>
             </div>
 
-
             <div className={styles.formContent}>
               {error && <p className={styles.errorMessage}>{error}</p>}
 
@@ -143,7 +141,7 @@ const SignupPage = () => {
                     value={formData.dateOfBirth}
                     onChange={handleChange}
                     error={dobError}
-                    max={today} // FIX: Add the max attribute here
+                    max={today}
                     required
                   />
                   <Input

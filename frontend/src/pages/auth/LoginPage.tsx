@@ -77,7 +77,6 @@ const LoginPage = () => {
                         onChange={handleChange}
                         required
                         />
-                        {/* FIX: Add custom loading text */}
                         <Button type="submit" isLoading={isLoading} loadingText="Sending OTP...">
                           Send OTP
                         </Button>
@@ -105,7 +104,6 @@ const LoginPage = () => {
                         />
                         <label htmlFor="rememberMe">Remember Me</label>
                         </div>
-                        {/* FIX: Add custom loading text */}
                         <Button type="submit" isLoading={isLoading} loadingText="Signing In...">
                           Sign In
                         </Button>

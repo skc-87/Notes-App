@@ -32,7 +32,7 @@ const NoteForm: React.FC<NoteFormProps> = ({ noteToEdit, onClose }) => {
     } else {
       await dispatch(createNote({ title, content }));
     }
-    dispatch(fetchNotes()); // Refetch all notes to ensure UI is in sync
+    dispatch(fetchNotes());
     onClose();
   };
 

@@ -12,7 +12,6 @@ interface AuthState {
   error: string | null;
 }
 
-// Helper to decode token and get user data
 const getUserFromToken = (token: string | null): User | null => {
   if (!token) return null;
   try {
@@ -33,7 +32,6 @@ const initialState: AuthState = {
   error: null,
 };
 
-// Async Thunks
 export const requestSignupOtp = createAsyncThunk(
   'auth/requestSignupOtp',
   authApi.requestSignupOtp
@@ -71,7 +69,6 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // FIX: All .addCase calls must come before .addMatcher calls.
       .addCase(verifyLoginOtp.fulfilled, (state, action) => {
         const rememberMe = action.meta.arg.rememberMe ?? true;
         state.isLoading = false;
@@ -85,16 +82,15 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.token = action.payload.token;
         state.user = action.payload.user;
-        setToken(action.payload.token, true); // Always remember on signup
+        setToken(action.payload.token, true);
       })
       .addCase(googleLogin.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isAuthenticated = true;
         state.token = action.payload.token;
         state.user = action.payload.user;
-        setToken(action.payload.token, true); // Always remember on Google login
+        setToken(action.payload.token, true);
       })
-      // Matchers for generic states come after specific cases
       .addMatcher(
         (action) => action.type.startsWith('auth/') && action.type.endsWith('/pending'),
         (state: AuthState) => {

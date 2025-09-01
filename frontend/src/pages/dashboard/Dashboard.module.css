@@ -1,13 +1,11 @@
-/* ========= Main Container ========= */
 .dashboardContainer {
   max-width: 800px;
   margin: 0 auto;
   padding: 1rem;
-  background-color: #f9fafb; /* Light gray background */
+  background-color: #f9fafb;
   min-height: 100vh;
 }
 
-/* ========= Header ========= */
 .header {
   display: flex;
   justify-content: space-between;
@@ -39,7 +37,6 @@
   font-size: 1rem;
 }
 
-/* ========= Main Content ========= */
 .mainContent {
   display: flex;
   flex-direction: column;
@@ -107,7 +104,6 @@
   margin-top: 1rem;
 }
 
-/* Mobile adjustments */
 @media (max-width: 767px) {
   .dashboardContainer {
     padding: 1.5rem 1rem;

@@ -40,7 +40,6 @@ const DashboardPage = () => {
   };
 
   const handleDeleteNote = (id: string) => {
-    // We replace window.confirm with a custom modal in a future step
     if (window.confirm('Are you sure you want to delete this note?')) {
       dispatch(deleteNote(id));
     }

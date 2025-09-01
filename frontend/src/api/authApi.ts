@@ -27,10 +27,7 @@ export const requestLoginOtp = async (data: { email: string }) => {
   return response.data;
 };
 
-// Corrected function
 export const verifyLoginOtp = async (data: { email: string; otp: string; rememberMe?: boolean }) => {
-  // We only send email and otp to the backend. 
-  // The 'rememberMe' flag is only used on the frontend in your Redux slice.
   const { email, otp } = data;
   const response = await api.post<{ token: string; user: User }>(
     '/auth/login/verify-otp',

@@ -1,15 +1,14 @@
-/* ========= Main Card Style ========= */
 .noteCard {
   background-color: #ffffff;
   border: 1px solid #e5e7eb;
-  border-radius: 12px; /* Curved corners */
+  border-radius: 12px;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* Align items to the top */
+  align-items: flex-start;
   padding: 1.5rem;
   transition: transform 0.2s, box-shadow 0.2s;
-  cursor: pointer; /* Make the whole card feel clickable */
+  cursor: pointer;
 }
 
 .noteCard:hover {
@@ -17,7 +16,6 @@
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07);
 }
 
-/* ========= Card Content ========= */
 .cardContent {
   flex-grow: 1;
 }
@@ -37,21 +35,20 @@
   font-size: 1rem;
 }
 
-/* ========= Action Buttons ========= */
 .cardActions {
   display: flex;
   align-items: center;
-  padding-left: 1rem; /* Space between content and button */
+  padding-left: 1rem;
 }
 
 .actionButton {
   background-color: transparent;
-  color: #9ca3af; /* Default icon color */
+  color: #9ca3af;
   border: none;
   cursor: pointer;
   width: 40px;
   height: 40px;
-  border-radius: 50%; /* Circular buttons */
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,5 +61,5 @@
 
 .deleteButton:hover {
   background-color: #fee2e2;
-  color: #ef4444; /* Red color on hover */
+  color: #ef4444;
 }

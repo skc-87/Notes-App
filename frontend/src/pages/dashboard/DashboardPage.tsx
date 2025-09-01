@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { logout } from '../../store/slices/authSlice';
@@ -11,13 +11,13 @@ import Button from '../../components/common/Button';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import NotesList from '../../components/notes/NotesList';
 import NoteForm from '../../components/notes/NoteForm';
+import logoIcon from '../../assets/icon.png';
 
 const DashboardPage = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { user } = useAuth();
   const { notes, isLoading } = useSelector((state: RootState) => state.notes);
 
-  // State to manage the NoteForm modal
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [noteToEdit, setNoteToEdit] = useState<Note | null>(null);
 
@@ -40,6 +40,7 @@ const DashboardPage = () => {
   };
 
   const handleDeleteNote = (id: string) => {
+    // We replace window.confirm with a custom modal in a future step
     if (window.confirm('Are you sure you want to delete this note?')) {
       dispatch(deleteNote(id));
     }
@@ -56,7 +57,10 @@ const DashboardPage = () => {
       
       <div className={styles.dashboardContainer}>
         <header className={styles.header}>
-          <div className={styles.logo}>HD Notes</div>
+          <div className={styles.logo}>
+            <img src={logoIcon} alt="HD Logo" className={styles.logoIcon} />
+            <span>Dashboard</span>
+          </div>
           <button onClick={handleLogout} className={styles.signOutButton}>
             Sign Out
           </button>
@@ -68,16 +72,24 @@ const DashboardPage = () => {
             <p>Email: {user?.email}</p>
           </div>
 
+          <Button 
+            onClick={handleCreateNoteClick} 
+            className={styles.createNoteButton}
+          >
+            Create Note
+          </Button>
+          
           <div className={styles.notesSection}>
             <div className={styles.notesHeader}>
               <h2>Notes</h2>
-              <Button onClick={handleCreateNoteClick}>Create Note</Button>
             </div>
 
             {isLoading && <div className={styles.centered}><LoadingSpinner /></div>}
             
             {!isLoading && notes.length === 0 && (
-              <div className={styles.centered}><p>No notes found. Create your first one!</p></div>
+              <div className={styles.centered}>
+                <p>No notes found. Create your first one!</p>
+              </div>
             )}
 
             {!isLoading && notes.length > 0 && (

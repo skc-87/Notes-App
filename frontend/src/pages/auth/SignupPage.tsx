@@ -21,10 +21,14 @@ const SignupPage = () => {
     password: '',
     otp: '',
   });
+  const [dobError, setDobError] = useState<string | null>(null);
 
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { isLoading, error, isAuthenticated } = useAuth();
+
+  // FIX: Get today's date in YYYY-MM-DD format for the max attribute
+  const today = new Date().toISOString().split('T')[0];
   
   useEffect(() => {
     dispatch(clearAuthError());
@@ -36,12 +40,48 @@ const SignupPage = () => {
     }
   }, [isAuthenticated, navigate]);
 
+  const validateDateOfBirth = (dateString: string): boolean => {
+    if (!dateString) {
+      setDobError('Date of birth is required.');
+      return false;
+    }
+
+    const selectedDate = new Date(dateString);
+    const today = new Date();
+    
+    selectedDate.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    if (selectedDate > today) {
+      setDobError('Date of birth cannot be in the future.');
+      return false;
+    }
+
+    const thirteenYearsAgo = new Date(today.getFullYear() - 13, today.getMonth(), today.getDate());
+    if (selectedDate > thirteenYearsAgo) {
+      setDobError('You must be at least 13 years old to sign up.');
+      return false;
+    }
+
+    setDobError(null);
+    return true;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    if (name === 'dateOfBirth') {
+      validateDateOfBirth(value);
+    }
   };
 
   const handleRequestOtp = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateDateOfBirth(formData.dateOfBirth)) {
+      return;
+    }
+    
     const result = await dispatch(
       requestSignupOtp({
         name: formData.name,
@@ -102,6 +142,8 @@ const SignupPage = () => {
                     type="date"
                     value={formData.dateOfBirth}
                     onChange={handleChange}
+                    error={dobError}
+                    max={today} // FIX: Add the max attribute here
                     required
                   />
                   <Input
@@ -113,8 +155,7 @@ const SignupPage = () => {
                     onChange={handleChange}
                     required
                   />
-                  {/* FIX: Add custom loading text */}
-                  <Button type="submit" isLoading={isLoading} loadingText="Getting OTP...">
+                  <Button type="submit" isLoading={isLoading} loadingText="Getting OTP..." disabled={isLoading || !!dobError}>
                     Get OTP
                   </Button>
                 </form>
@@ -142,7 +183,6 @@ const SignupPage = () => {
                     required
                     placeholder="Must be at least 6 characters"
                   />
-                  {/* FIX: Add custom loading text */}
                   <Button type="submit" isLoading={isLoading} loadingText="Signing Up...">
                     Sign Up
                   </Button>

@@ -34,23 +34,53 @@ const initialState: AuthState = {
 
 export const requestSignupOtp = createAsyncThunk(
   'auth/requestSignupOtp',
-  authApi.requestSignupOtp
+  async (data: Parameters<typeof authApi.requestSignupOtp>[0], { rejectWithValue }) => {
+    try {
+      return await authApi.requestSignupOtp(data);
+    } catch (error) {
+      return rejectWithValue(typeof error === 'string' ? error : 'Failed to send OTP. Please try again.');
+    }
+  }
 );
 export const verifySignupOtp = createAsyncThunk(
   'auth/verifySignupOtp',
-  authApi.verifySignupOtp
+  async (data: Parameters<typeof authApi.verifySignupOtp>[0], { rejectWithValue }) => {
+    try {
+      return await authApi.verifySignupOtp(data);
+    } catch (error) {
+      return rejectWithValue(typeof error === 'string' ? error : 'Failed to verify OTP. Please try again.');
+    }
+  }
 );
 export const requestLoginOtp = createAsyncThunk(
   'auth/requestLoginOtp',
-  authApi.requestLoginOtp
+  async (data: Parameters<typeof authApi.requestLoginOtp>[0], { rejectWithValue }) => {
+    try {
+      return await authApi.requestLoginOtp(data);
+    } catch (error) {
+      return rejectWithValue(typeof error === 'string' ? error : 'Failed to send OTP. Please try again.');
+    }
+  }
 );
 export const verifyLoginOtp = createAsyncThunk(
   'auth/verifyLoginOtp',
-  authApi.verifyLoginOtp
+  async (data: Parameters<typeof authApi.verifyLoginOtp>[0], { rejectWithValue }) => {
+    try {
+      return await authApi.verifyLoginOtp(data);
+    } catch (error) {
+      return rejectWithValue(typeof error === 'string' ? error : 'Failed to sign in. Please try again.');
+    }
+  }
 );
 export const googleLogin = createAsyncThunk(
   'auth/googleLogin',
-  authApi.googleLogin
+  async (idToken: string, { rejectWithValue }) => {
+    try {
+      return await authApi.googleLogin(idToken);
+    } catch (error) {
+      return rejectWithValue(typeof error === 'string' ? error : 'Google sign-in failed. Please try again.');
+    }
+  }
 );
 
 const authSlice = createSlice({

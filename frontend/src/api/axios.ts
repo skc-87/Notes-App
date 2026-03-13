@@ -21,6 +21,12 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    if (!error.response) {
+      return Promise.reject('Unable to connect to the server. Please check your internet connection and try again.');
+    }
+    if (error.response.status === 404) {
+      return Promise.reject('The requested service is currently unavailable. Please try again later.');
+    }
     const message = error.response?.data?.message || error.message || 'An unknown error occurred';
     return Promise.reject(message);
   }

@@ -25,7 +25,11 @@ export const deleteNote = createAsyncThunk('notes/deleteNote', async (id: string
 const notesSlice = createSlice({
   name: 'notes',
   initialState,
-  reducers: {},
+  reducers: {
+    clearNotesError: (state) => {
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchNotes.pending, (state) => {
@@ -42,16 +46,25 @@ const notesSlice = createSlice({
       })
       .addCase(createNote.fulfilled, (state, action: PayloadAction<Note>) => {
         state.notes.unshift(action.payload);
+        state.error = null;
       })
       .addCase(updateNote.fulfilled, (state, action: PayloadAction<Note>) => {
         const index = state.notes.findIndex(note => note._id === action.payload._id);
         if (index !== -1) {
             state.notes[index] = action.payload;
         }
+        state.error = null;
       })
       .addCase(deleteNote.fulfilled, (state, action: PayloadAction<string>) => {
         state.notes = state.notes.filter(note => note._id !== action.payload);
-      });
+        state.error = null;
+      })
+      .addMatcher(
+        (action) => action.type.startsWith('notes/') && action.type.endsWith('/rejected') && action.type !== 'notes/fetchNotes/rejected',
+        (state, action: PayloadAction<string>) => {
+          state.error = (action.payload as string) || 'An error occurred. Please try again.';
+        }
+      );
   },
 });
 

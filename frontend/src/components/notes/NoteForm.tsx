@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../store/store';
-import { createNote, updateNote, fetchNotes } from '../../store/slices/notesSlice';
+import { createNote, updateNote } from '../../store/slices/notesSlice';
 import { Note } from '../../types';
 import Button from '../common/Button';
 import styles from './NoteForm.module.css';
@@ -27,13 +27,15 @@ const NoteForm: React.FC<NoteFormProps> = ({ noteToEdit, onClose }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    let result;
     if (isEditing) {
-      await dispatch(updateNote({ id: noteToEdit._id, title, content }));
+      result = await dispatch(updateNote({ id: noteToEdit._id, title, content }));
     } else {
-      await dispatch(createNote({ title, content }));
+      result = await dispatch(createNote({ title, content }));
     }
-    dispatch(fetchNotes());
-    onClose();
+    if (!result.meta.requestStatus || result.meta.requestStatus === 'fulfilled') {
+      onClose();
+    }
   };
 
   return (

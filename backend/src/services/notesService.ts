@@ -56,6 +56,7 @@ export const updateNote = async (
     await note.save();
     return note;
   } catch (error) {
+    if (error instanceof Error) throw error;
     throw new Error('Failed to update note');
   }
 };
@@ -70,6 +71,7 @@ export const deleteNote = async (noteId: string, userId: Types.ObjectId): Promis
     
     await Note.deleteOne({ _id: noteId });
   } catch (error) {
+    if (error instanceof Error) throw error;
     throw new Error('Failed to delete note');
   }
 };

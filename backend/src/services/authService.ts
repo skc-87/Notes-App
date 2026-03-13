@@ -1,4 +1,5 @@
 import User, { IUser } from '../models/User';
+import bcrypt from 'bcryptjs';
 import { generateOTP } from '../utils/otpGenerator';
 import { sendOTPEmail } from './emailService';
 import { verifyGoogleToken, findOrCreateGoogleUser } from '../config/googleAuth';
@@ -11,10 +12,11 @@ export const requestSignupOTP = async (name: string, email: string, dateOfBirth:
 
   const otp = generateOTP();
   const otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
+  const hashedOtp = await bcrypt.hash(otp, 10);
 
   let user = await User.findOneAndUpdate(
     { email, isVerified: false },
-    { name, dateOfBirth, otp, otpExpiry },
+    { name, dateOfBirth, otp: hashedOtp, otpExpiry },
     { new: true, upsert: true }
   );
 
@@ -37,12 +39,13 @@ export const verifyUserOTP = async (email: string, otp: string, password: string
     throw new Error('OTP not found or has expired. Please request a new one.');
   }
 
-  if (user.otp !== otp) {
-    throw new Error('Invalid OTP');
-  }
-
   if (user.otpExpiry < new Date()) {
     throw new Error('OTP has expired');
+  }
+
+  const isOtpValid = await bcrypt.compare(otp, user.otp);
+  if (!isOtpValid) {
+    throw new Error('Invalid OTP');
   }
 
   user.password = password;
@@ -62,7 +65,8 @@ export const requestLoginOTP = async (email: string): Promise<void> => {
   }
 
   const otp = generateOTP();
-  user.otp = otp;
+  const hashedOtp = await bcrypt.hash(otp, 10);
+  user.otp = hashedOtp;
   user.otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
   await user.save();
 
@@ -80,12 +84,13 @@ export const verifyLoginOTP = async (email: string, otp: string): Promise<IUser>
     throw new Error('OTP not found or has expired. Please request a new one.');
   }
 
-  if (user.otp !== otp) {
-    throw new Error('Invalid OTP.');
-  }
-
   if (user.otpExpiry < new Date()) {
     throw new Error('OTP has expired.');
+  }
+
+  const isOtpValid = await bcrypt.compare(otp, user.otp);
+  if (!isOtpValid) {
+    throw new Error('Invalid OTP.');
   }
 
   user.otp = undefined;
@@ -102,6 +107,10 @@ export const loginUser = async (email: string, password: string): Promise<IUser>
     throw new Error('Invalid email or password');
   }
   
+  if (!user.isVerified) {
+    throw new Error('Please verify your email first');
+  }
+
   if (!user.password) {
     throw new Error('Please use Google login for this account');
   }
@@ -110,10 +119,6 @@ export const loginUser = async (email: string, password: string): Promise<IUser>
   
   if (!isPasswordMatch) {
     throw new Error('Invalid email or password');
-  }
-  
-  if (!user.isVerified) {
-    throw new Error('Please verify your email first');
   }
   
   return user;

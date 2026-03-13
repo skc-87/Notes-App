@@ -119,6 +119,26 @@ export const googleLogin = async (req: AuthRequest, res: Response): Promise<void
   }
 };
 
-export const getGoogleAuthStatus = async (req: AuthRequest, res: Response): Promise<void> => {};
+export const getGoogleAuthStatus = async (req: AuthRequest, res: Response): Promise<void> => {
+  const isConfigured = !!(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET);
+  res.status(200).json({ isConfigured });
+};
 
-export const getMe = async (req: AuthRequest, res: Response): Promise<void> => {};
+export const getMe = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    if (!req.user) {
+      res.status(401).json({ message: 'Not authenticated' });
+      return;
+    }
+
+    res.status(200).json({
+      user: {
+        id: req.user._id,
+        name: req.user.name,
+        email: req.user.email,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};

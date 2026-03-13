@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getToken } from '../utils/authToken';
+import { getToken, clearToken } from '../utils/authToken';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_BACKEND_API_URL,
@@ -23,6 +23,11 @@ api.interceptors.response.use(
   (error) => {
     if (!error.response) {
       return Promise.reject('Unable to connect to the server. Please check your internet connection and try again.');
+    }
+    if (error.response.status === 401) {
+      clearToken();
+      window.location.href = '/login';
+      return Promise.reject('Session expired. Please log in again.');
     }
     if (error.response.status === 404) {
       return Promise.reject('The requested service is currently unavailable. Please try again later.');

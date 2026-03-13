@@ -6,7 +6,10 @@ import { store } from './store/store';
 import App from './App';
 import './styles/globals.css';
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
+if (!GOOGLE_CLIENT_ID) {
+  console.warn('⚠️ VITE_GOOGLE_CLIENT_ID is not set. Google Sign-In will not work.');
+}
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

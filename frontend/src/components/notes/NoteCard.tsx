@@ -13,7 +13,13 @@ const NoteCard: React.FC<NoteCardProps> = ({ note, onEdit, onDelete }) => {
     <div className={styles.noteCard}>
       <div className={styles.cardContent} onClick={() => onEdit(note)}>
         <h3>{note.title}</h3>
-        <p>{note.content}</p>
+        <p style={{
+          display: '-webkit-box',
+          WebkitLineClamp: 3,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+        }}>{note.content}</p>
       </div>
       <div className={styles.cardActions}>
         <button

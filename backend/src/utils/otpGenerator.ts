@@ -7,13 +7,4 @@ export const generateOTP = (): string => {
     step: 300,
   });
 };
-
-export const verifyOTP = (token: string, secret: string): boolean => {
-  return speakeasy.totp.verify({
-    secret: secret,
-    encoding: 'base32',
-    token: token,
-    step: 300,
-    window: 1,
-  });
-};
+

@@ -1,15 +1,22 @@
 import { OAuth2Client } from 'google-auth-library';
 import User from '../models/User';
 
-export const googleClient = new OAuth2Client(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  `${process.env.CLIENT_URL}/auth/google/callback`
-);
+let googleClient: OAuth2Client | null = null;
+
+const getGoogleClient = (): OAuth2Client => {
+  if (!googleClient) {
+    googleClient = new OAuth2Client(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      `${process.env.CLIENT_URL}/auth/google/callback`
+    );
+  }
+  return googleClient;
+};
 
 export const verifyGoogleToken = async (idToken: string) => {
   try {
-    const ticket = await googleClient.verifyIdToken({
+    const ticket = await getGoogleClient().verifyIdToken({
       idToken,
       audience: process.env.GOOGLE_CLIENT_ID,
     });

@@ -1,5 +1,6 @@
 import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../types';
+import mongoose from 'mongoose';
 
 export const validateLogin = (req: AuthRequest, res: Response, next: NextFunction): void => {
   const { email, password } = req.body;
@@ -58,4 +59,33 @@ export const validateOtpRequest = (req: AuthRequest, res: Response, next: NextFu
   }
 
   next();
+};
+
+export const validateEmail = (req: AuthRequest, res: Response, next: NextFunction): void => {
+  const { email } = req.body;
+
+  if (!email) {
+    res.status(400).json({ message: 'Please provide an email address' });
+    return;
+  }
+
+  if (!/\S+@\S+\.\S+/.test(email)) {
+    res.status(400).json({ message: 'Please provide a valid email address' });
+    return;
+  }
+
+  next();
+};
+
+export const validateObjectId = (paramName: string) => {
+  return (req: AuthRequest, res: Response, next: NextFunction): void => {
+    const id = req.params[paramName];
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      res.status(400).json({ message: `Invalid ${paramName} format` });
+      return;
+    }
+
+    next();
+  };
 };

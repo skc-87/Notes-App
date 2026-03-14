@@ -103,3 +103,53 @@ In your second terminal (from the frontend directory):
 npm run dev
 
 You can now access the application by opening your browser and navigating to http://localhost:5173.
+
+---
+
+## Deployment
+
+### Backend → Render
+
+1. Push your repository to GitHub.
+2. Go to [https://render.com](https://render.com) and create a **New Web Service**.
+3. Connect your GitHub repository. Render will auto-detect the `render.yaml` at the repo root.
+   - **Root Directory:** `backend`
+   - **Build Command:** `npm install && npm run build`
+   - **Start Command:** `npm start`
+   - **Environment:** `Node`
+4. Set the following **Environment Variables** in the Render dashboard:
+   | Variable | Value |
+   |---|---|
+   | `MONGODB_URI` | Your MongoDB Atlas connection string |
+   | `JWT_SECRET` | A strong random secret (min 32 chars) |
+   | `CLIENT_URL` | Your Vercel frontend URL (e.g. `https://hd-notes.vercel.app`) |
+   | `GOOGLE_CLIENT_ID` | Your Google OAuth client ID |
+   | `GOOGLE_CLIENT_SECRET` | Your Google OAuth client secret |
+   | `EMAIL_HOST` | `smtp.gmail.com` |
+   | `EMAIL_PORT` | `587` |
+   | `EMAIL_USER` | Your Gmail address |
+   | `EMAIL_PASS` | Your Gmail App Password |
+5. Click **Deploy**. Your API will be live at `https://<service-name>.onrender.com`.
+
+> **Note:** Free-tier Render services spin down after inactivity. The first request after a cold start may take ~30 seconds.
+
+---
+
+### Frontend → Vercel
+
+1. Go to [https://vercel.com](https://vercel.com) and click **Add New Project**.
+2. Import your GitHub repository.
+3. Set the **Root Directory** to `frontend`.
+4. Vercel will auto-detect Vite. Confirm:
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+5. Add the following **Environment Variables** in the Vercel dashboard:
+   | Variable | Value |
+   |---|---|
+   | `VITE_BACKEND_API_URL` | Your Render backend URL (e.g. `https://hd-notes-backend.onrender.com`) |
+   | `VITE_GOOGLE_CLIENT_ID` | Same Google OAuth client ID as the backend |
+6. Click **Deploy**. Your app will be live at `https://<project-name>.vercel.app`.
+
+> **Important:** After both services are deployed, go back to your Render service and update `CLIENT_URL` to your Vercel production URL so CORS works correctly.
+
+> **Google OAuth:** Add both your Vercel URL and `http://localhost:5173` as **Authorized JavaScript Origins** in the [Google Cloud Console](https://console.cloud.google.com) → APIs & Services → Credentials.

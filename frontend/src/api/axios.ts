@@ -2,7 +2,7 @@ import axios from 'axios';
 import { getToken, clearToken } from '../utils/authToken';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_API_URL,
+  baseURL: `${import.meta.env.VITE_BACKEND_API_URL}/api`,
 });
 
 api.interceptors.request.use(

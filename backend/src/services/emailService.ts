@@ -7,16 +7,21 @@ const emailUser = process.env.EMAIL_USER?.trim();
 // Gmail app passwords are often copied with spaces (e.g., "abcd efgh ijkl mnop").
 const emailPass = process.env.EMAIL_PASS?.replace(/\s+/g, '');
 
-const transporter = nodemailer.createTransport({
+const createTransporter = (port: number, secure: boolean) => nodemailer.createTransport({
   host: emailHost,
-  port: emailPort,
-  secure: isSecurePort,
-  requireTLS: !isSecurePort,
+  port,
+  secure,
+  requireTLS: !secure,
+  connectionTimeout: 15000,
+  greetingTimeout: 15000,
+  socketTimeout: 20000,
   auth: {
     user: emailUser,
     pass: emailPass,
   },
 });
+
+const transporter = createTransporter(emailPort, isSecurePort);
 
 export const sendOTPEmail = async (email: string, otp: string): Promise<void> => {
   if (!emailHost || !emailUser || !emailPass) {
@@ -40,6 +45,21 @@ export const sendOTPEmail = async (email: string, otp: string): Promise<void> =>
   try {
     await transporter.sendMail(mailOptions);
   } catch (error: any) {
+    if (error?.code === 'ETIMEDOUT' && emailPort === 587) {
+      try {
+        const fallbackTransporter = createTransporter(465, true);
+        await fallbackTransporter.sendMail(mailOptions);
+        return;
+      } catch (fallbackError: any) {
+        console.error('SMTP fallback sendMail failed', {
+          code: fallbackError?.code,
+          responseCode: fallbackError?.responseCode,
+          command: fallbackError?.command,
+          message: fallbackError?.message,
+        });
+      }
+    }
+
     console.error('SMTP sendMail failed', {
       code: error?.code,
       responseCode: error?.responseCode,

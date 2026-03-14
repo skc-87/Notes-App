@@ -15,6 +15,9 @@ startApp();
 
 const app = express();
 
+// Render sits behind a reverse proxy; trust the first proxy for client IP detection.
+app.set('trust proxy', 1);
+
 const allowedOrigins = [
   'http://localhost:5173',
   ...(process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',').map(o => o.trim()) : []),
